@@ -2,19 +2,17 @@ require 'csv'
 require_relative '../lib/merchant'
 
 class MerchantRepository
-
   def initialize(file_path, parent)
     @merchants = []
     @sales_engine = parent
-    merchant_data = CSV.open file_path, headers: true, header_converters: :symbol, converters: :numeric
+    merchant_data = CSV.open file_path, headers: true,
+      header_converters: :symbol, converters: :numeric
     parse(merchant_data)
   end
 
   def parse(merchant_data)
     merchant_data.each do |row|
-      id = row[:id]
-      name = row[:name]
-      @merchants << Merchant.new({id: id, name: name}, self)
+      @merchants << Merchant.new(row.to_hash, self)
     end
   end
 
